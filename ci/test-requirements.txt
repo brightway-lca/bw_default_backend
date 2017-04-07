@@ -1,0 +1,5 @@
+peewee
+stats_arrays
+numpy
+pytest
+pytest-cov

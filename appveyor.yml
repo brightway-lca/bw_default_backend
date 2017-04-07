@@ -11,7 +11,7 @@ environment:
 install:
   - powershell .\\ci\\appveyor-install.ps1
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
-  - "pip install --no-cache-dir -r requirements.txt"
+  - "pip install --no-cache-dir -r ci/test-requirements.txt"
 
 test_script:
   - pytest
