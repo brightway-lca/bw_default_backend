@@ -18,7 +18,7 @@ before_install:
   - echo $(python --version)
 install: "pip install -r ci/test-requirements.txt"
 script:
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then pwd; ls; pytest --cov=brightway-default-backend; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then pwd; ls; pytest --cov=bw-default-backend; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then pytest tests; fi
 after_success:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then coveralls; fi

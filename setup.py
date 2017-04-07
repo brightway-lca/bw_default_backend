@@ -4,7 +4,7 @@ from os import path
 here = path.abspath(path.dirname(__file__))
 
 setup(
-    name='brightway-default-backend',
+    name='bw-default-backend',
     version='0.1',
     description='Default backend for Brightway Life Cycle Assessment framework',
     long_description=open(os.path.join(here, "README.md")).read(),
