@@ -10,4 +10,6 @@ def temp_project_dir():
     td = tempfile.mkdtemp()
     config.activate(td)
     yield config
+    if config.dirpath:
+        config.deactivate()
     shutil.rmtree(td)

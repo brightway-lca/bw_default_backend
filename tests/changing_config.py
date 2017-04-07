@@ -24,4 +24,5 @@ def test_changing_config_raises_wrong_database(temp_project_dir):
     with pytest.raises(WrongDatabase):
         co.delete_instance()
 
+    config.deactivate()
     shutil.rmtree(td)
