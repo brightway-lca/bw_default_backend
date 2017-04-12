@@ -1,11 +1,7 @@
 import tempfile
 import shutil
 import pytest
-try:
-    from bw_default_backend import config
-except ImportError:
-    print("Problem import default backend")
-    raise
+from bw_default_backend import config
 
 
 @pytest.fixture(scope="function")
