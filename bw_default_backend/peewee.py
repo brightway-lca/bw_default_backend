@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from peewee import SqliteDatabase, Model, TextField
-from playhouse.shortcuts import RetryOperationalError
 import os
 import json
 
@@ -15,20 +14,38 @@ class JSONField(TextField):
         return json.loads(value)
 
 
-class TupleField(TextField):
-    def db_value(self, value):
-        if not (value is None or isinstance(value, (list, tuple))):
-            raise ValueError("Value must be a tuple: {}".format(value))
-        return super(JSONField, self).db_value(
-            json.dumps(value)
-        )
+class SubstitutableDatabase(object):
+    def __init__(self, filepath, tables):
+        self._filepath = filepath
+        self._tables = tables
+        self._database = self._create_database()
 
-    def python_value(self, value):
-        return tuple(json.loads(value))
+    def _create_database(self):
+        db = SqliteDatabase(self._filepath)
+        for model in self._tables:
+            model.bind(db, bind_refs=False, bind_backrefs=False)
+        db.connect()
+        db.create_tables(self._tables)
+        return db
 
+    @property
+    def db(self):
+        return self._database
 
-class RetryDatabase(RetryOperationalError, SqliteDatabase):
-    pass
+    def change_path(self, filepath):
+        self.db.close()
+        self._filepath = filepath
+        self._database = self._create_database()
 
+    def atomic(self):
+        return self.db.atomic()
 
-database = RetryDatabase(None)
+    def execute_sql(self, *args, **kwargs):
+        return self.db.execute_sql(*args, **kwargs)
+
+    def transaction(self):
+        return self.db.transaction()
+
+    def vacuum(self):
+        print("Vacuuming database ")
+        self.execute_sql('VACUUM;')

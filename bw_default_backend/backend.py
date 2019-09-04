@@ -6,6 +6,7 @@ from .schema import *
 
 class Config:
     implements_common_api = True
+    label = "default-backend"
     provides = {
         'activity': Activity,
         'characterization factor': CharacterizationFactor,
@@ -23,9 +24,9 @@ class Config:
     ]
 
     def activate(self, dirpath):
-        if not check_dir(dirpath):
-            raise ValueError("Provided directory is not valid or writable")
-        self.dirpath = dirpath
+        self.dirpath = Path(dirpath)
+        if not self.dirpath.is_dir():
+            raise ValueError("provided `dirpath` does not exist")
         for name in self.directories:
             create_dir(os.path.join(self.dirpath, name))
         database.init(os.path.join(self.dirpath, "db", "data.db"))
