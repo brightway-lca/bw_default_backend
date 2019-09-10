@@ -1,47 +1,59 @@
 import os
-from .peewee import database
-from .filesystem import create_dir, check_dir
-from .schema import *
+from brightway.peewee import SubstitutableDatabase
+from .schema import TABLES
 
 
 class Config:
-    implements_common_api = True
+    __brightway_common_api__ = True
     label = "default-backend"
-    provides = {
-        'activity': Activity,
-        'characterization factor': CharacterizationFactor,
-        'collection': Collection,
-        'exchange': Exchange,
-        'flow': Flow,
-        'geocollection': Geocollection,
-        'location': Location,
-        'method': Method,
-    }
+
     directories = [
         'db',
         'processed',
         'output',
     ]
 
-    def activate(self, dirpath):
-        self.dirpath = Path(dirpath)
-        if not self.dirpath.is_dir():
-            raise ValueError("provided `dirpath` does not exist")
-        for name in self.directories:
-            create_dir(os.path.join(self.dirpath, name))
-        database.init(os.path.join(self.dirpath, "db", "data.db"))
-        database.create_tables(
-            list(self.provides.values()),
-            safe=True
-        )
-
     @property
     def processed_dir(self):
         if not self.dirpath:
-            raise ValueError("Backend has not been activated")
-        return os.path.join(self.dirpath, "processed")
+            raise ValueError
+        return self.dirpath / "processed"
 
-    def deactivate(self):
+    def activate_project(self, obj):
+        self.dirpath = obj.directory
+        self.db = SubstitutableDatabase(
+            self.dirpath / "db" / "data.db",
+            TABLES
+        )
+
+    def deactivate_project(self, obj):
+        self.db.close()
         self.dirpath = None
-        database.close()
-        database.database = None
+
+    def create_project(self, obj):
+        self.dirpath = obj.directory
+        if not os.access(self.dirpath, os.W_OK):
+            raise ValueError("Project directory not writable")
+        if not self.dirpath.is_dir():
+            raise ValueError("provided `dirpath` does not exist")
+        for name in self.directories:
+            (self.dirpath / name).mkdir(parents=True, exist_ok=True)
+
+    def copy_project(self, old, new):
+        pass
+        # self.copied_old = old
+        # self.copied_new = new
+
+    def delete_project(self, obj):
+        pass
+        # self.deleted = obj
+
+    def export_project(self, obj, filepath):
+        pass
+        # self.exported = obj
+        # self.exported_filepath = filepath
+
+    def import_project(self, obj, filepath):
+        pass
+        # self.imported = obj
+        # self.imported_filepath = filepath

@@ -1,19 +1,17 @@
-from . import ProjectAwareModel
-from ..peewee import database, JSONField
-from peewee import TextField, ForeignKeyField
+from brightway.peewee import JSONField
+from peewee import TextField, ForeignKeyField, Model
 
 
-class Geocollection(ProjectAwareModel):
+class Geocollection(Model):
     name = TextField(unique=True)
     data = JSONField()
 
 
-class Location(ProjectAwareModel):
-    geocollection = ForeignKeyField(Geocollection, related_name='locations')
+class Location(Model):
+    geocollection = ForeignKeyField(Geocollection, backref='locations')
     name = TextField()
 
     class Meta:
-        database = database
         indexes = (
             (('geocollection', 'name'), True),
         )

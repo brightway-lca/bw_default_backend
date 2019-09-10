@@ -1,13 +1,12 @@
-from . import ProjectAwareModel
-from ..filesystem import safe_filename
-from ..peewee import JSONField, TupleField
+from brightway.filesystem import safe_filename
+from brightway.peewee import JSONField, TupleField
 from .geo import Location
-from peewee import TextField, ForeignKeyField, DateTimeField, FloatField, fn
+from peewee import TextField, ForeignKeyField, DateTimeField, FloatField, fn, Model
 import datetime
 import os
 
 
-class Collection(ProjectAwareModel):
+class Collection(Model):
     name = TextField(unique=True)
     data = JSONField()
     dependents = JSONField(null=True)
@@ -84,11 +83,11 @@ class CollectionList:
 collections = CollectionList()
 
 
-class Activity(ProjectAwareModel):
+class Activity(Model):
     name = TextField()
     unit = TextField(null=True)
-    collection = ForeignKeyField(Collection, related_name='activities')
-    location = ForeignKeyField(Location, null=True, related_name='activities')
+    collection = ForeignKeyField(Collection, backref='activities')
+    location = ForeignKeyField(Location, null=True, backref='activities')
     reference_product = TextField(null=True)
     data = JSONField()
 
@@ -116,18 +115,18 @@ class Activity(ProjectAwareModel):
         )
 
 
-class Flow(ProjectAwareModel):
+class Flow(Model):
     name = TextField()
     unit = TextField()
-    location = ForeignKeyField(Location, null=True, related_name='flows')
-    collection = ForeignKeyField(Collection, related_name='flows')
+    location = ForeignKeyField(Location, null=True, backref='flows')
+    collection = ForeignKeyField(Collection, backref='flows')
     categories = TupleField()
     data = JSONField()
 
 
-class Exchange(ProjectAwareModel):
-    activity = ForeignKeyField(Activity, related_name='exchanges')
-    flow = ForeignKeyField(Flow, related_name='exchanges')
+class Exchange(Model):
+    activity = ForeignKeyField(Activity, backref='exchanges')
+    flow = ForeignKeyField(Flow, backref='exchanges')
     kind = TextField()
     data = JSONField()
     amount = FloatField()

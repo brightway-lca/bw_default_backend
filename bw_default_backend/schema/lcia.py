@@ -1,11 +1,11 @@
-from . import Location, Flow, ProjectAwareModel
-from ..peewee import JSONField, TupleField
+from . import Location, Flow
 from ..filesystem import abbreviate
-from peewee import TextField, ForeignKeyField, DateTimeField, FloatField
+from brightway.peewee import JSONField, TupleField
+from peewee import TextField, ForeignKeyField, DateTimeField, FloatField, Model
 import datetime
 
 
-class Method(ProjectAwareModel):
+class Method(Model):
     name = TupleField(unique=True)
     data = JSONField()
     modified = DateTimeField()
@@ -23,9 +23,9 @@ class Method(ProjectAwareModel):
         super().save()
 
 
-class CharacterizationFactor(ProjectAwareModel):
-    flow = ForeignKeyField(Flow, related_name="cfs")
-    method = ForeignKeyField(Method, related_name="cfs")
+class CharacterizationFactor(Model):
+    flow = ForeignKeyField(Flow, backref="cfs")
+    method = ForeignKeyField(Method, backref="cfs")
     amount = FloatField()
     uncertainty = JSONField()
     location = ForeignKeyField(Location, null=True)
