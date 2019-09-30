@@ -1,3 +1,4 @@
+git+git://github.com/brightway-lca/brightway@master#egg=brightway
 peewee
 stats_arrays
 numpy
