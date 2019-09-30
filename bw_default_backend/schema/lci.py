@@ -1,6 +1,7 @@
 from brightway.filesystem import safe_filename
 from brightway.peewee import JSONField, TupleField
 from .geo import Location
+from .generic import UncertaintyType
 from peewee import TextField, ForeignKeyField, DateTimeField, FloatField, fn, Model
 import datetime
 import os
@@ -8,17 +9,17 @@ import os
 
 class Collection(Model):
     name = TextField(unique=True)
-    data = JSONField()
+    data = JSONField(default={})
     dependents = JSONField(null=True)
-    modified = DateTimeField()
+    modified = DateTimeField(default=datetime.datetime.now)
 
     def random(self):
         """Get a random `Activity`"""
         return self.activities.order_by(fn.Random()).get()
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.modified = datetime.datetime.now()
-        super().save()
+        super().save(*args, **kwargs)
 
     def dependents(self):
         """Find the `Collections` that are consumed by `Activities` in this `Collection`."""
@@ -83,13 +84,23 @@ class CollectionList:
 collections = CollectionList()
 
 
+class Flow(Model):
+    name = TextField()
+    unit = TextField()
+    kind = TextField()
+    location = ForeignKeyField(Location, null=True, backref='flows')
+    collection = ForeignKeyField(Collection, backref='flows')
+    categories = TupleField(default=[])
+    data = JSONField(default={})
+
+
 class Activity(Model):
     name = TextField()
     unit = TextField(null=True)
     collection = ForeignKeyField(Collection, backref='activities')
     location = ForeignKeyField(Location, null=True, backref='activities')
-    reference_product = TextField(null=True)
-    data = JSONField()
+    reference_product = ForeignKeyField(Flow, null=True)
+    data = JSONField(default={})
 
     def __getitem__(self, key):
         if key in ("name", "unit", "collection", "location", "reference_product"):
@@ -115,26 +126,15 @@ class Activity(Model):
         )
 
 
-class Flow(Model):
-    name = TextField()
-    unit = TextField()
-    location = ForeignKeyField(Location, null=True, backref='flows')
-    collection = ForeignKeyField(Collection, backref='flows')
-    categories = TupleField()
-    data = JSONField()
-
-
 class Exchange(Model):
     activity = ForeignKeyField(Activity, backref='exchanges')
     flow = ForeignKeyField(Flow, backref='exchanges')
-    kind = TextField()
-    data = JSONField()
+    direction = TextField(default="consumption")
+    data = JSONField(default={})
     amount = FloatField()
-    uncertainty = JSONField()
+    uncertainty_type = ForeignKeyField(UncertaintyType, null=True, backref='exchanges')
 
-    def save(self):
-        if 'uncertainty type' not in self.uncertainty:
-            self.uncertainty['uncertainty type'] = 0
-        uncertainty_choices[self['uncertainty']['uncertainty type']].validate(
-            self['uncertainty'])
-        super().save()
+    # def save(self):
+    #     if self.uncertainty_type is not None:
+    #         uncertainty_choices[self.uncertainty_type.id].validate(self.data)
+    #     super().save()

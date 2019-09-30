@@ -4,7 +4,7 @@ from peewee import TextField, ForeignKeyField, Model
 
 class Geocollection(Model):
     name = TextField(unique=True)
-    data = JSONField()
+    data = JSONField(default={})
 
 
 class Location(Model):

@@ -8,6 +8,7 @@ __all__ = (
     'Geocollection',
     'Location',
     'Method',
+    'UncertaintyType',
 )
 
 __version__ = (0, 1)
@@ -26,4 +27,9 @@ from .schema import (
     Location,
     Method,
     CharacterizationFactor,
+    UncertaintyType,
 )
+
+from brightway import backend_mapping
+
+backend_mapping['default'] = config

@@ -1,3 +1,4 @@
+from .generic import UncertaintyType
 from .geo import Geocollection, Location
 from .lci import Collection, collections, Flow, Activity, Exchange
 from .lcia import Method, CharacterizationFactor
@@ -12,4 +13,5 @@ TABLES = [
     Geocollection,
     Location,
     Method,
+    UncertaintyType,
 ]

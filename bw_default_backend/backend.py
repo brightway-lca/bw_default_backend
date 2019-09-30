@@ -1,59 +1,83 @@
-import os
+from .filesystem import create_dir, check_dir
+from .schema import *
 from brightway.peewee import SubstitutableDatabase
-from .schema import TABLES
+import os
+import stats_arrays as sa
 
 
 class Config:
     __brightway_common_api__ = True
     label = "default-backend"
-
+    provides = {
+        'activity': Activity,
+        'characterization factor': CharacterizationFactor,
+        'collection': Collection,
+        'exchange': Exchange,
+        'flow': Flow,
+        'geocollection': Geocollection,
+        'location': Location,
+        'method': Method,
+        'uncertainty type': UncertaintyType,
+    }
     directories = [
         'db',
         'processed',
         'output',
     ]
 
+    def __init__(self):
+        self.__reset__()
+
+    def __reset__(self):
+        self.project = None
+        self.database = SubstitutableDatabase(tables=list(self.provides.values()))
+
+    def activate_project(self, project):
+        print("Calling activate_project:", project, project.directory)
+        self.project = project
+        self.database._change_path(project.directory / "db" / "data.db")
+        print("Config project:", self.project.directory)
+
+    def deactivate_project(self, project):
+        self.project = None
+        self.database.close()
+
+    def create_project(self, project):
+        if not check_dir(project.directory):
+            raise ValueError("Project directory doesn't exist or is not writable")
+        for name in self.directories:
+            create_dir(project.directory / name)
+        self.database._change_path(project.directory / "db" / "data.db")
+
+        # Create basic uncertainty distributions
+        for i in range(max(sa.uncertainty_choices.id_dict)):
+            try:
+                obj = sa.uncertainty_choices.id_dict[i]
+                UncertaintyType.create(
+                    id=i,
+                    label=obj.description
+                )
+            except KeyError:
+                UncertaintyType.create(
+                    id=i,
+                    label="Dummy uncertainty for missing `stats_arrays` value {}".format(i)
+                )
+
+    def copy_project(self, name):
+        self.copied = name
+
+    def delete_project(self, name):
+        """No-op, as directory will be deleted"""
+        pass
+
+    def export_project(self, name):
+        self.exported = name
+
+    def import_project(self, name):
+        self.imported = name
+
     @property
     def processed_dir(self):
         if not self.dirpath:
-            raise ValueError
-        return self.dirpath / "processed"
-
-    def activate_project(self, obj):
-        self.dirpath = obj.directory
-        self.db = SubstitutableDatabase(
-            self.dirpath / "db" / "data.db",
-            TABLES
-        )
-
-    def deactivate_project(self, obj):
-        self.db.close()
-        self.dirpath = None
-
-    def create_project(self, obj):
-        self.dirpath = obj.directory
-        if not os.access(self.dirpath, os.W_OK):
-            raise ValueError("Project directory not writable")
-        if not self.dirpath.is_dir():
-            raise ValueError("provided `dirpath` does not exist")
-        for name in self.directories:
-            (self.dirpath / name).mkdir(parents=True, exist_ok=True)
-
-    def copy_project(self, old, new):
-        pass
-        # self.copied_old = old
-        # self.copied_new = new
-
-    def delete_project(self, obj):
-        pass
-        # self.deleted = obj
-
-    def export_project(self, obj, filepath):
-        pass
-        # self.exported = obj
-        # self.exported_filepath = filepath
-
-    def import_project(self, obj, filepath):
-        pass
-        # self.imported = obj
-        # self.imported_filepath = filepath
+            raise ValueError("Backend has not been activated")
+        return os.path.join(self.dirpath, "processed")

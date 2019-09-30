@@ -1,21 +1,27 @@
 from brightway import projects
 from brightway.testing import bwtest
-from bw_default_backend import config, Collection, Method
+from bw_default_backend import config, Collection, Method, UncertaintyType
 import os
 import pytest
 
 
 def test_basic_setup(bwtest):
     projects.create("foo")
-    assert config.dirpath
-    assert "db" in os.listdir(config.dirpath)
+    assert config.project
+    assert "db" in os.listdir(config.project.directory)
     assert Collection.select().count() == 0
     assert Method.select().count() == 0
 
 
 def test_deactivation(bwtest):
     projects.create("foo")
-    config.deactivate()
-    assert not config.dirpath
-    with pytest.raises(TypeError):
-        Collection.select().count()
+    config.deactivate_project(None)
+    assert not config.project
+    # with pytest.raises(TypeError):
+    #     Collection.select().count()
+
+
+def test_uncertainty_type_creation(bwtest):
+    assert UncertaintyType.select().count() == 0
+    projects.create("foo")
+    assert UncertaintyType.select().count() == 12
