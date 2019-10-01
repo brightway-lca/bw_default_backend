@@ -30,6 +30,6 @@ from .schema import (
     UncertaintyType,
 )
 
-from brightway import backend_mapping
+from brightway_projects import backend_mapping
 
 backend_mapping['default'] = config

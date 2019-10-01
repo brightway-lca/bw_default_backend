@@ -1,5 +1,5 @@
-from brightway.filesystem import safe_filename
-from brightway.peewee import JSONField, TupleField
+from brightway_projects.filesystem import safe_filename
+from brightway_projects.peewee import JSONField, TupleField
 from .geo import Location
 from .generic import UncertaintyType
 from peewee import TextField, ForeignKeyField, DateTimeField, FloatField, fn, Model

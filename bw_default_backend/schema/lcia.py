@@ -1,6 +1,6 @@
 from . import Location, Flow
 from ..filesystem import abbreviate
-from brightway.peewee import JSONField, TupleField
+from brightway_projects.peewee import JSONField, TupleField
 from peewee import TextField, ForeignKeyField, DateTimeField, FloatField, Model
 import datetime
 

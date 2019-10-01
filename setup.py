@@ -4,11 +4,11 @@ import os
 here = os.path.abspath(os.path.dirname(__file__))
 
 setup(
-    name='brightway-default-backend',
+    name='bw_default_backend',
     version='0.1',
     description='Default backend for Brightway Life Cycle Assessment framework',
     long_description=open(os.path.join(here, "README.md")).read(),
-    url='https://github.com/pypa/sampleproject',
+    url='https://github.com/brightway-lca/bw_default_backend',
     author='Chris Mutel',
     author_email='cmutel@gmail.com',
     license=open(os.path.join(here, "LICENSE.txt")).read(),

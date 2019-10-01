@@ -1,5 +1,5 @@
-from brightway import projects
-from brightway.testing import bwtest
+from brightway_projects import projects
+from brightway_projects.testing import bwtest
 from bw_default_backend import config, Collection, Method, UncertaintyType
 import os
 import pytest

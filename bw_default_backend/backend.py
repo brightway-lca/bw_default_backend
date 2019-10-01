@@ -1,6 +1,6 @@
 from .filesystem import create_dir, check_dir
 from .schema import *
-from brightway.peewee import SubstitutableDatabase
+from brightway_projects.peewee import SubstitutableDatabase
 import os
 import stats_arrays as sa
 

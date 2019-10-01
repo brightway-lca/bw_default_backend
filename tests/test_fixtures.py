@@ -1,5 +1,5 @@
 from fixtures.create_fixtures import basic_fixture
-from brightway.testing import bwtest, projects
+from brightway_projects.testing import bwtest, projects
 from bw_default_backend import *
 
 

@@ -1,4 +1,4 @@
-from brightway.peewee import JSONField
+from brightway_projects.peewee import JSONField
 from peewee import TextField, ForeignKeyField, Model
 
 
