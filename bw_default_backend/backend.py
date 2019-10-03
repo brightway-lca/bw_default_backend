@@ -36,26 +36,31 @@ class Config:
         self.project = None
         self.database.close()
 
-    def create_project(self, project):
+    def create_project(self, project, add_base_data=True):
         if not check_dir(project.directory):
             raise ValueError("Project directory doesn't exist or is not writable")
         for name in self.directories:
             create_dir(project.directory / name)
         self.database._change_path(project.directory / "db" / "data.db")
 
-        # Create basic uncertainty distributions
-        for i in range(max(sa.uncertainty_choices.id_dict)):
-            try:
-                obj = sa.uncertainty_choices.id_dict[i]
-                UncertaintyType.create(id=i, label=obj.description)
-            except KeyError:
-                UncertaintyType.create(
-                    id=i,
-                    label="Dummy uncertainty for missing `stats_arrays` value {}".format(
-                        i
-                    ),
-                )
         self.__create_triggers()
+
+        if add_base_data:
+            # Create basic uncertainty distributions
+            for i in range(max(sa.uncertainty_choices.id_dict)):
+                try:
+                    obj = sa.uncertainty_choices.id_dict[i]
+                    UncertaintyType.create(id=i, label=obj.description)
+                except KeyError:
+                    UncertaintyType.create(
+                        id=i,
+                        label="Dummy uncertainty for missing `stats_arrays` value {}".format(
+                            i
+                        ),
+                    )
+
+            world = Geocollection.create(name="world")
+            Location.create(geocollection=world, name="Global")
 
     def __create_triggers(self):
         self.database.execute_sql(
