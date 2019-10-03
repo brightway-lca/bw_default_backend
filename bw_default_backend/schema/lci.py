@@ -112,7 +112,6 @@ class Flow(DataModel):
 
 class Activity(DataModel):
     name = TextField()
-    unit = TextField(null=True)
     collection = ForeignKeyField(Collection, backref="activities")
     location = ForeignKeyField(Location, null=True, backref="activities")
     reference_product = ForeignKeyField(Flow, null=True)

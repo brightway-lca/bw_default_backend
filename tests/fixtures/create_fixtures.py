@@ -38,7 +38,6 @@ def basic_fixture():
     )
     lunch_activity = backend.Activity.create(
         name="eating lunch",
-        unit="kg",
         collection=food_collection,
         reference_product=lunch_flow,
         location=canada,
@@ -62,7 +61,6 @@ def basic_fixture():
     )
     dinner_activity = backend.Activity.create(
         name="eating dinner",
-        unit="kg",
         collection=food_collection,
         reference_product=dinner_flow,
         location=canada,
