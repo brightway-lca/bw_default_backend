@@ -1,15 +1,14 @@
 from brightway_projects.filesystem import safe_filename
 from brightway_projects.peewee import JSONField, TupleField
 from .geo import Location
-from .generic import UncertaintyType
+from .generic import UncertaintyType, DataModel
 from peewee import TextField, ForeignKeyField, DateTimeField, FloatField, fn, Model
 import datetime
 import os
 
 
-class Collection(Model):
+class Collection(DataModel):
     name = TextField(unique=True)
-    data = JSONField(default={})
     dependents = JSONField(null=True)
     modified = DateTimeField(default=datetime.datetime.now)
 
@@ -48,25 +47,25 @@ class Collection(Model):
     @property
     def filepath_geoarray(self):
         from .. import config
+
         return os.path.join(
-            config.processed_dir,
-            "geoarray." + safe_filename(self.name)
+            config.processed_dir, "geoarray." + safe_filename(self.name)
         )
 
     @property
     def filepath_technosphere(self):
         from .. import config
+
         return os.path.join(
-            config.processed_dir,
-            "technosphere." + safe_filename(self.name)
+            config.processed_dir, "technosphere." + safe_filename(self.name)
         )
 
     @property
     def filepath_biosphere(self):
         from .. import config
+
         return os.path.join(
-            config.processed_dir,
-            "biosphere." + safe_filename(self.name)
+            config.processed_dir, "biosphere." + safe_filename(self.name)
         )
 
 
@@ -84,21 +83,21 @@ class CollectionList:
 collections = CollectionList()
 
 
-class Flow(Model):
+class Flow(DataModel):
     name = TextField()
     unit = TextField()
     kind = TextField()
-    location = ForeignKeyField(Location, null=True, backref='flows')
-    collection = ForeignKeyField(Collection, backref='flows')
+    location = ForeignKeyField(Location, null=True, backref="flows")
+    collection = ForeignKeyField(Collection, backref="flows")
     categories = TupleField(default=[])
     data = JSONField(default={})
 
 
-class Activity(Model):
+class Activity(DataModel):
     name = TextField()
     unit = TextField(null=True)
-    collection = ForeignKeyField(Collection, backref='activities')
-    location = ForeignKeyField(Location, null=True, backref='activities')
+    collection = ForeignKeyField(Collection, backref="activities")
+    location = ForeignKeyField(Location, null=True, backref="activities")
     reference_product = ForeignKeyField(Flow, null=True)
     data = JSONField(default={})
 
@@ -109,30 +108,29 @@ class Activity(Model):
             return self.data[key]
 
     def technosphere(self):
-        return self.exchanges.where(kind == 'technosphere')
+        return self.exchanges.where(kind == "technosphere")
 
     def biosphere(self):
-        return self.exchanges.where(kind == 'biosphere')
+        return self.exchanges.where(kind == "biosphere")
 
     def production(self):
-        return self.exchanges.where(kind == 'production')
+        return self.exchanges.where(kind == "production")
 
     def consumers(self):
         return Exchange.select().where(
-            kind == 'technosphere' &
-            flow << self.exchanges.select(Exchange.flow).where(
-                Exchange.kind == 'production'
-            )
+            kind
+            == "technosphere"
+            & flow
+            << self.exchanges.select(Exchange.flow).where(Exchange.kind == "production")
         )
 
 
-class Exchange(Model):
-    activity = ForeignKeyField(Activity, backref='exchanges')
-    flow = ForeignKeyField(Flow, backref='exchanges')
+class Exchange(DataModel):
+    activity = ForeignKeyField(Activity, backref="exchanges")
+    flow = ForeignKeyField(Flow, backref="exchanges")
     direction = TextField(default="consumption")
-    data = JSONField(default={})
     amount = FloatField()
-    uncertainty_type = ForeignKeyField(UncertaintyType, null=True, backref='exchanges')
+    uncertainty_type = ForeignKeyField(UncertaintyType, null=True, backref="exchanges")
 
     # def save(self):
     #     if self.uncertainty_type is not None:

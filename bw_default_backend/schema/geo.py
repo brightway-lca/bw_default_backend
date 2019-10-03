@@ -1,13 +1,12 @@
-from brightway_projects.peewee import JSONField
 from peewee import TextField, ForeignKeyField, Model
+from .generic import DataModel
 
 
-class Geocollection(Model):
+class Geocollection(DataModel):
     name = TextField(unique=True)
-    data = JSONField(default={})
 
 
-class Location(Model):
+class Location(DataModel):
     geocollection = ForeignKeyField(Geocollection, backref='locations')
     name = TextField()
 

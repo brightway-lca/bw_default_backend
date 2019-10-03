@@ -9,21 +9,17 @@ class Config:
     __brightway_common_api__ = True
     label = "default-backend"
     provides = {
-        'activity': Activity,
-        'characterization factor': CharacterizationFactor,
-        'collection': Collection,
-        'exchange': Exchange,
-        'flow': Flow,
-        'geocollection': Geocollection,
-        'location': Location,
-        'method': Method,
-        'uncertainty type': UncertaintyType,
+        "activity": Activity,
+        "characterization factor": CharacterizationFactor,
+        "collection": Collection,
+        "exchange": Exchange,
+        "flow": Flow,
+        "geocollection": Geocollection,
+        "location": Location,
+        "method": Method,
+        "uncertainty type": UncertaintyType,
     }
-    directories = [
-        'db',
-        'processed',
-        'output',
-    ]
+    directories = ["db", "processed", "output"]
 
     def __init__(self):
         self.__reset__()
@@ -33,10 +29,8 @@ class Config:
         self.database = SubstitutableDatabase(tables=list(self.provides.values()))
 
     def activate_project(self, project):
-        print("Calling activate_project:", project, project.directory)
         self.project = project
         self.database._change_path(project.directory / "db" / "data.db")
-        print("Config project:", self.project.directory)
 
     def deactivate_project(self, project):
         self.project = None
@@ -53,14 +47,13 @@ class Config:
         for i in range(max(sa.uncertainty_choices.id_dict)):
             try:
                 obj = sa.uncertainty_choices.id_dict[i]
-                UncertaintyType.create(
-                    id=i,
-                    label=obj.description
-                )
+                UncertaintyType.create(id=i, label=obj.description)
             except KeyError:
                 UncertaintyType.create(
                     id=i,
-                    label="Dummy uncertainty for missing `stats_arrays` value {}".format(i)
+                    label="Dummy uncertainty for missing `stats_arrays` value {}".format(
+                        i
+                    ),
                 )
 
     def copy_project(self, name):

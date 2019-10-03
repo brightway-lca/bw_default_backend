@@ -1,13 +1,13 @@
 from . import Location, Flow
+from .generic import DataModel
 from ..filesystem import abbreviate
 from brightway_projects.peewee import JSONField, TupleField
 from peewee import TextField, ForeignKeyField, DateTimeField, FloatField, Model
 import datetime
 
 
-class Method(Model):
+class Method(DataModel):
     name = TupleField(unique=True)
-    data = JSONField()
     modified = DateTimeField()
 
     @property
@@ -23,7 +23,7 @@ class Method(Model):
         super().save()
 
 
-class CharacterizationFactor(Model):
+class CharacterizationFactor(DataModel):
     flow = ForeignKeyField(Flow, backref="cfs")
     method = ForeignKeyField(Method, backref="cfs")
     amount = FloatField()

@@ -5,8 +5,6 @@ import pytest
 
 @pytest.fixture(scope="function")
 def basic_fixture():
-    print("basic fixture config id:", id(backend.config))
-
     NAME = "test-fixtures"
     # if NAME in bw.projects:
     #     bw.projects.delete_project(NAME)
