@@ -1,5 +1,5 @@
 from . import Location, Flow
-from .generic import DataModel
+from .generic import DataModel, UncertaintyType
 from ..filesystem import abbreviate
 from brightway_projects.peewee import JSONField, TupleField
 from peewee import TextField, ForeignKeyField, DateTimeField, FloatField, Model
