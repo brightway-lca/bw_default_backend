@@ -55,6 +55,30 @@ class Config:
                         i
                     ),
                 )
+        self.__create_triggers()
+
+    def __create_triggers(self):
+        self.database.execute_sql(
+            """CREATE TRIGGER update_collection_modified_delete after delete
+                on exchange
+                begin
+                    update collection set modified = current_timestamp where id in (select distinct activity.collection_id from activity join exchange on activity.id = exchange.activity_id);
+                end;"""
+        )
+        self.database.execute_sql(
+            """CREATE TRIGGER update_collection_modified_insert after insert
+                on exchange
+                begin
+                    update collection set modified = current_timestamp where id in (select distinct activity.collection_id from activity join exchange on activity.id = exchange.activity_id);
+                end;"""
+        )
+        self.database.execute_sql(
+            """CREATE TRIGGER update_collection_modified_update after update
+                on exchange
+                begin
+                    update collection set modified = current_timestamp where id in (select distinct activity.collection_id from activity join exchange on activity.id = exchange.activity_id);
+                end;"""
+        )
 
     def copy_project(self, name):
         self.copied = name
