@@ -10,6 +10,12 @@ class Method(DataModel):
     name = TupleField(unique=True)
     modified = DateTimeField()
 
+    def __str__(self):
+        return "Method {}".format(self.name)
+
+    def __repr__(self):
+        return "Method {}:{} ({})".format(self.id, self.name, self.modified)
+
     @property
     def filepath_processed(self):
         from .. import config
@@ -27,12 +33,15 @@ class CharacterizationFactor(DataModel):
     flow = ForeignKeyField(Flow, backref="cfs")
     method = ForeignKeyField(Method, backref="cfs")
     amount = FloatField()
-    uncertainty = JSONField()
     location = ForeignKeyField(Location, null=True)
+    uncertainty_type = ForeignKeyField(UncertaintyType, null=True, backref="cfs")
 
-    def save(self):
-        if 'uncertainty type' not in self.uncertainty:
-            self.uncertainty['uncertainty type'] = 0
-        uncertainty_choices[self['uncertainty']['uncertainty type']].validate(
-            self['uncertainty'])
-        super().save()
+    def __repr__(self):
+        return "Characterization Factor {} {} ({}; {})".format(self.amount, self.flow, self.method, self.location)
+
+    # def save(self):
+    #     if 'uncertainty type' not in self.uncertainty:
+    #         self.uncertainty['uncertainty type'] = 0
+    #     uncertainty_choices[self['uncertainty']['uncertainty type']].validate(
+    #         self['uncertainty'])
+    #     super().save()

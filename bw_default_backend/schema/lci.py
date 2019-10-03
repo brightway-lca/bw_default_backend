@@ -12,7 +12,13 @@ class Collection(DataModel):
     dependents = JSONField(null=True)
     modified = DateTimeField(default=datetime.datetime.now)
 
-    def random(self):
+    def __str__(self):
+        return "Collection {}".format(self.name)
+
+    def __repr__(self):
+        return "Collection {}:{} ({})".format(self.id, self.name, self.modified)
+
+    def random_activity(self):
         """Get a random `Activity`"""
         return self.activities.order_by(fn.Random()).get()
 
@@ -90,7 +96,12 @@ class Flow(DataModel):
     location = ForeignKeyField(Location, null=True, backref="flows")
     collection = ForeignKeyField(Collection, backref="flows")
     categories = TupleField(default=[])
-    data = JSONField(default={})
+
+    def __str__(self):
+        return "Flow {}".format(self.name)
+
+    def __repr__(self):
+        return "Flow {} ({}; {}; {}; {})".format(self.name, self.collection, self.location, self.categories, self.unit)
 
 
 class Activity(DataModel):
@@ -99,13 +110,12 @@ class Activity(DataModel):
     collection = ForeignKeyField(Collection, backref="activities")
     location = ForeignKeyField(Location, null=True, backref="activities")
     reference_product = ForeignKeyField(Flow, null=True)
-    data = JSONField(default={})
 
-    def __getitem__(self, key):
-        if key in ("name", "unit", "collection", "location", "reference_product"):
-            return getattr(self, key)
-        else:
-            return self.data[key]
+    def __str__(self):
+        return "Activity {}".format(self.name)
+
+    def __repr__(self):
+        return "Activity {} ({}; {}; {}; {})".format(self.name, self.collection, self.location, self.reference_product, self.unit)
 
     def technosphere(self):
         return self.exchanges.where(kind == "technosphere")

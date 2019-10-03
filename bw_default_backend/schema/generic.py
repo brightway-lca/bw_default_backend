@@ -5,6 +5,12 @@ from peewee import TextField, Model
 class UncertaintyType(Model):
     label = TextField()
 
+    def __str__(self):
+        return "Uncertainty Type {}".format(self.label)
+
+    def __repr__(self):
+        return "Uncertainty Type {}:{}".format(self.id, self.label)
+
 
 class DataModel(Model):
     """Class that stores extra attributes and values in ``.data``."""
