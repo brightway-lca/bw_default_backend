@@ -28,26 +28,32 @@ class Collection(DataModel):
 
     def dependents(self):
         """Find the `Collections` that are consumed by `Activities` in this `Collection`."""
-        consumed_flows = Exchange.select(fn.Distinct(Exchange.flow)).where(Exchange.kind == 'technosphere')
-        producing_collections = Exchange.join(Activity).select(
-            fn.Distinct(Activity.collection)).where(
-            Exchange.flow << consumed_flows &
-            Exchange.kind == 'production')
-        return producing_collections
+        qs = (
+            Exchange.select(fn.Distinct(Flow.collection_id))
+            .join(Flow, on=(Exchange.flow_id == Flow.id))
+            .join(Activity, on=(Exchange.activity_id == Activity.id))
+            .where(Activity.collection_id == self.id)
+            .tuples()
+        )
+        ids = [i for i in qs if i != self.id]
+        return Collection.select().where(Collection.id << ids)
 
     def recursive_dependents(self):
         """Get names of all collections consumed by the complete supply chain of this ``Collection``"""
-        queue, seen = [obj.name for obj in self.dependents], set([self.name])
+        queue, seen = [obj.name for obj in self.dependents()], set([self.name])
         while queue:
             name = queue.pop()
             if name in seen:
                 continue
             else:
                 seen.add(name)
-                queue.extend([
-                    obj.name for obj in Collection(name).dependents()
-                    if obj.name not in seen
-                ])
+                queue.extend(
+                    [
+                        obj.name
+                        for obj in Collection(name).dependents()
+                        if obj.name not in seen
+                    ]
+                )
         return seen
 
     @property
