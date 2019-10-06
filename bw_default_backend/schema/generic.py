@@ -1,5 +1,5 @@
 from brightway_projects.peewee import JSONField
-from peewee import TextField, Model
+from peewee import TextField, Model, fn
 
 
 class UncertaintyType(Model):
@@ -27,3 +27,7 @@ class DataModel(Model):
             setattr(self, key, value)
         else:
             self.data[key] = value
+
+    @classmethod
+    def span(cls):
+        return (cls.select(fn.MIN(cls.id)).scalar(), cls.select(fn.MAX(cls.id)).scalar())
