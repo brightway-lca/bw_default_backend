@@ -28,6 +28,5 @@ setup(
         'peewee',
         'stats_arrays',
         'numpy',
-        'wrapt',
     ],
 )
