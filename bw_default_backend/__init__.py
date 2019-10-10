@@ -13,9 +13,9 @@ __all__ = (
     "Location",
     "Method",
     "replace",
+    "reset_database",
     "UncertaintyType",
     "update",
-    "write_data",
 )
 
 __version__ = (0, 1)
@@ -54,3 +54,4 @@ from brightway_projects import backend_mapping
 backend_mapping["default"] = config
 
 from .io import catalogue, create, delete, replace, update
+from .utils import reset_database

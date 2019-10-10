@@ -10,6 +10,8 @@ def basic_fixture():
     #     bw.projects.delete_project(NAME)
     bw.projects.create(NAME)
 
+    backend.reset_database()
+
     biosphere_collection = backend.Collection.create(name="biosphere")
     food_collection = backend.Collection.create(name="food")
 
