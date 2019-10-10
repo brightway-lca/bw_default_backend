@@ -18,6 +18,19 @@ import itertools
 import os
 
 
+MODEL_LENGTHS = {
+    "uncertainty types": 2,
+    "geocollections": 3,
+    "locations": 4,
+    "collections": 4,
+    "flows": 8,
+    "methods": 4,
+    "characterization factors": 7,
+    "activities": 6,
+    "exchanges": 7,
+}
+
+
 def increment_ids(data):
     """Increment all ids to be greater than the maximum currently in each database table.
 
@@ -145,9 +158,9 @@ def create(data):
     with config.database.atomic():
         increment_ids(data)
         for label, model in label_mapping.items():
-            if len(data[label]):
+            if data[label]:
                 write_chunked_sql(
-                    (model.reformat(o) for o in data[label]), model, len(data[label])
+                    (model.reformat(o) for o in data[label]), model, MODEL_LENGTHS[label]
                 )
 
 
@@ -264,9 +277,9 @@ def insert_existing_database(filepath):
     with config.database.atomic():
         sql("attach database ? as source_db", (filepath,))
 
-        sql(
-            """insert into uncertaintytype ("id", "label") select "id", "label" from source_db.uncertaintytype where "id" not in (select "id" from uncertaintytype") """
-        )
+        # sql(
+        #     """insert into uncertaintytype ("id", "label") select "id", "label" from source_db.uncertaintytype where "id" not in (select "id" from uncertaintytype") """
+        # )
 
         geocollection_offset = Geocollection.max()
         if scalar("select count() from source_db.geocollection"):
@@ -307,7 +320,7 @@ def insert_existing_database(filepath):
         if scalar("select count() from source_db.method"):
             method_offset = Method.max()
             sql(
-                """insert into method ("id", "data", "name", "modified") select "id" + ?, "data", "name", CURRENT_TIMESTAMP from source_db.exchange""",
+                """insert into method ("id", "data", "name", "modified") select "id" + ?, "data", "name", CURRENT_TIMESTAMP from source_db.method""",
                 (method_offset,),
             )
             cf_offset = CharacterizationFactor.max()
@@ -316,4 +329,4 @@ def insert_existing_database(filepath):
                 (cf_offset, flow_offset, method_offset, location_offset),
             )
 
-        sql("detach source_db")
+    sql("detach source_db")

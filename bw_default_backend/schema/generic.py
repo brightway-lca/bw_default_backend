@@ -1,5 +1,5 @@
 from brightway_projects.peewee import JSONField
-from peewee import TextField, Model, fn
+from peewee import TextField, Model, fn, ForeignKeyField
 
 
 class ExtendedModel(Model):
@@ -44,7 +44,8 @@ class DataModel(ExtendedModel):
     @classmethod
     def reformat(cls, dct):
         """Reformat a dictionary to put data in correct keys, including ``data``."""
-        fn = [x for x in cls._meta.sorted_field_names if x != "data"] + ["id"]
+        fn = [x for x in cls._meta.fields if x != "data"]
+        fn.extend([k + "_id" for k, v in cls._meta.fields.items() if isinstance(v, ForeignKeyField)])
         return {
             "data": {k: v for k, v in dct.items() if k not in fn},
             **{k: v for k, v in dct.items() if k in fn},
