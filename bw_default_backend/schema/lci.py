@@ -1,16 +1,14 @@
-from brightway_projects.filesystem import safe_filename
-from brightway_projects.peewee import JSONField, TupleField
-from .geo import Location
 from .generic import UncertaintyType, DataModel
-from peewee import TextField, ForeignKeyField, DateTimeField, FloatField, fn, Model
+from .geo import Location
+from brightway_projects.filesystem import safe_filename
+from brightway_projects.peewee import TupleField
+from peewee import TextField, ForeignKeyField, DateTimeField, FloatField, fn, SQL
 import datetime
-import os
 
 
 class Collection(DataModel):
     name = TextField(unique=True)
-    dependents = JSONField(null=True)
-    modified = DateTimeField(default=datetime.datetime.now)
+    modified = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')])
 
     def __str__(self):
         return "Collection {}".format(self.name)
@@ -56,29 +54,29 @@ class Collection(DataModel):
                 )
         return seen
 
-    @property
-    def filepath_geoarray(self):
-        from .. import config
+    # @property
+    # def filepath_geoarray(self):
+    #     from .. import config
 
-        return os.path.join(
-            config.processed_dir, "geoarray." + safe_filename(self.name)
-        )
+    #     return os.path.join(
+    #         config.processed_dir, "geoarray." + safe_filename(self.name)
+    #     )
 
-    @property
-    def filepath_technosphere(self):
-        from .. import config
+    # @property
+    # def filepath_technosphere(self):
+    #     from .. import config
 
-        return os.path.join(
-            config.processed_dir, "technosphere." + safe_filename(self.name)
-        )
+    #     return os.path.join(
+    #         config.processed_dir, "technosphere." + safe_filename(self.name)
+    #     )
 
-    @property
-    def filepath_biosphere(self):
-        from .. import config
+    # @property
+    # def filepath_biosphere(self):
+    #     from .. import config
 
-        return os.path.join(
-            config.processed_dir, "biosphere." + safe_filename(self.name)
-        )
+    #     return os.path.join(
+    #         config.processed_dir, "biosphere." + safe_filename(self.name)
+    #     )
 
 
 class CollectionList:
@@ -107,7 +105,9 @@ class Flow(DataModel):
         return "Flow {}".format(self.name)
 
     def __repr__(self):
-        return "Flow {} ({}; {}; {}; {})".format(self.name, self.collection, self.location, self.categories, self.unit)
+        return "Flow {} ({}; {}; {}; {})".format(
+            self.name, self.collection, self.location, self.categories, self.unit
+        )
 
 
 class Activity(DataModel):
@@ -120,7 +120,9 @@ class Activity(DataModel):
         return "Activity {}".format(self.name)
 
     def __repr__(self):
-        return "Activity {} ({}; {}; {}; {})".format(self.name, self.collection, self.location, self.reference_product, self.unit)
+        return "Activity {} ({}; {}; {}; {})".format(
+            self.name, self.collection, self.location, self.reference_product, self.unit
+        )
 
     def technosphere(self):
         return self.exchanges.where(kind == "technosphere")

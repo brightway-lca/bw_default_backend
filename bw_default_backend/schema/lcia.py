@@ -1,14 +1,14 @@
 from . import Location, Flow
 from .generic import DataModel, UncertaintyType
-from ..filesystem import abbreviate
-from brightway_projects.peewee import JSONField, TupleField
-from peewee import TextField, ForeignKeyField, DateTimeField, FloatField, Model
+# from ..filesystem import abbreviate
+from brightway_projects.peewee import TupleField
+from peewee import ForeignKeyField, DateTimeField, FloatField, SQL
 import datetime
 
 
 class Method(DataModel):
     name = TupleField(unique=True)
-    modified = DateTimeField()
+    modified = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')])
 
     def __str__(self):
         return "Method {}".format(self.name)
@@ -16,13 +16,13 @@ class Method(DataModel):
     def __repr__(self):
         return "Method {}:{} ({})".format(self.id, self.name, self.modified)
 
-    @property
-    def filepath_processed(self):
-        from .. import config
-        return os.path.join(
-            config.processed_dir,
-            "method." + abbreviate(self.name)
-        )
+    # @property
+    # def filepath_processed(self):
+    #     from .. import config
+    #     return os.path.join(
+    #         config.processed_dir,
+    #         "method." + abbreviate(self.name)
+    #     )
 
     def save(self):
         self.modified = datetime.datetime.now()
@@ -37,7 +37,9 @@ class CharacterizationFactor(DataModel):
     uncertainty_type = ForeignKeyField(UncertaintyType, null=True, backref="cfs")
 
     def __repr__(self):
-        return "Characterization Factor {} {} ({}; {})".format(self.amount, self.flow, self.method, self.location)
+        return "Characterization Factor {} {} ({}; {})".format(
+            self.amount, self.flow, self.method, self.location
+        )
 
     # def save(self):
     #     if 'uncertainty type' not in self.uncertainty:

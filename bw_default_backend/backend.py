@@ -1,24 +1,37 @@
 from .filesystem import create_dir, check_dir
-from .schema import *
+from .schema import (
+    Activity,
+    Collection,
+    collections,
+    Exchange,
+    Flow,
+    Geocollection,
+    Location,
+    Method,
+    CharacterizationFactor,
+    UncertaintyType,
+)
 from brightway_projects.peewee import SubstitutableDatabase
 import os
 import stats_arrays as sa
 
+TABLES = (
+    Activity,
+    Collection,
+    Exchange,
+    Flow,
+    Geocollection,
+    Location,
+    Method,
+    CharacterizationFactor,
+    UncertaintyType,
+)
+
 
 class Config:
     __brightway_common_api__ = True
+    __brightway_common_api_version__ = 1
     label = "default-backend"
-    provides = {
-        "activity": Activity,
-        "characterization factor": CharacterizationFactor,
-        "collection": Collection,
-        "exchange": Exchange,
-        "flow": Flow,
-        "geocollection": Geocollection,
-        "location": Location,
-        "method": Method,
-        "uncertainty type": UncertaintyType,
-    }
     directories = ["db", "processed", "output"]
 
     def __init__(self):
@@ -26,7 +39,7 @@ class Config:
 
     def __reset__(self):
         self.project = None
-        self.database = SubstitutableDatabase(tables=list(self.provides.values()))
+        self.database = SubstitutableDatabase(tables=list(TABLES))
 
     def activate_project(self, project):
         self.project = project

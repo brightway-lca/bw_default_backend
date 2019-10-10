@@ -1,4 +1,4 @@
-from peewee import TextField, ForeignKeyField, Model
+from peewee import TextField, ForeignKeyField
 from .generic import DataModel
 
 
@@ -13,7 +13,7 @@ class Geocollection(DataModel):
 
 
 class Location(DataModel):
-    geocollection = ForeignKeyField(Geocollection, backref='locations')
+    geocollection = ForeignKeyField(Geocollection, backref="locations")
     name = TextField()
 
     def __str__(self):
@@ -23,6 +23,4 @@ class Location(DataModel):
         return "Location {}:{} ({})".format(self.id, self.name, self.geocollection)
 
     class Meta:
-        indexes = (
-            (('geocollection', 'name'), True),
-        )
+        indexes = ((("geocollection", "name"), True),)

@@ -3,7 +3,7 @@ import os
 import re
 import unicodedata
 
-re_slugify = re.compile('[^\w\s-]', re.UNICODE)
+re_slugify = re.compile("[^\w\s-]", re.UNICODE)
 
 
 def safe_filename(string, add_hash=True):
@@ -13,14 +13,9 @@ def safe_filename(string, add_hash=True):
 
     From http://stackoverflow.com/questions/295135/turn-a-string-into-a-valid-filename-in-python"""
     safe = re.sub(
-        '[-\s]+',
-        '-',
-        str(
-            re_slugify.sub(
-                '',
-                unicodedata.normalize('NFKD', str(string))
-            ).strip()
-        )
+        "[-\s]+",
+        "-",
+        str(re_slugify.sub("", unicodedata.normalize("NFKD", str(string))).strip()),
     )
     if add_hash:
         if isinstance(string, str):
@@ -33,8 +28,9 @@ def safe_filename(string, add_hash=True):
 def abbreviate(obj):
     """Take a tuple or list and construct a filename-safe string"""
     return (
-        safe_filename(".".join([x[:6].replace(" ", "") for x in obj]), False) +
-        "." + hashlib.md5(str(obj).encode("utf8")).hexdigest()
+        safe_filename(".".join([x[:6].replace(" ", "") for x in obj]), False)
+        + "."
+        + hashlib.md5(str(obj).encode("utf8")).hexdigest()
     )
 
 
