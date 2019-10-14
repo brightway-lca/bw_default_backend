@@ -139,6 +139,7 @@ def catalogue(filters):
 
 
 @has_project
+@config.database.atomic
 def create(data):
     """Add new data to a project.
 
@@ -155,16 +156,16 @@ def create(data):
         None
 
     """
-    with config.database.atomic():
-        increment_ids(data)
-        for label, model in label_mapping.items():
-            if data[label]:
-                write_chunked_sql(
-                    (model.reformat(o) for o in data[label]), model, MODEL_LENGTHS[label]
-                )
+    increment_ids(data)
+    for label, model in label_mapping.items():
+        if data[label]:
+            write_chunked_sql(
+                (model.reformat(o) for o in data[label]), model, MODEL_LENGTHS[label]
+            )
 
 
 @has_project
+@config.database.atomic
 def replace(data):
     """Completely replace currently existing data with ``data``.
 
@@ -179,13 +180,13 @@ def replace(data):
         None
 
     """
-    with config.database.atomic():
-        delete(data)
-        increment_ids(data)
-        create(data)
+    delete(data)
+    increment_ids(data)
+    create(data)
 
 
 @has_project
+@config.database.atomic
 def update(data):
     """Update currently existing data with new values in ``data``.
 
@@ -200,8 +201,7 @@ def update(data):
     Returns:
         None
     """
-    with config.database.atomic():
-        pass
+    pass
 
 
 @has_project
