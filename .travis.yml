@@ -36,6 +36,7 @@ install:
       pip install --pre https://github.com/brightway-lca/brightway_projects/archive/master.zip;
       pip install -e .;
     else
+      pip3 install --upgrade pip;
       pip3 install --pre -r ci/test-requirements.txt;
       pip3 install -e .;
     fi
@@ -45,6 +46,10 @@ script:
       ls;
       pytest --cov=bw_default_backend;
       coveralls;
+      if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then
+        conda install conda-build anaconda-client;
+        bash ci/conda_upload.sh;
+      fi
     else
       pytest;
     fi

@@ -3,7 +3,7 @@ import os
 import re
 import unicodedata
 
-re_slugify = re.compile("[^\w\s-]", re.UNICODE)
+re_slugify = re.compile(r"[^\w\s-]", re.UNICODE)
 
 
 def safe_filename(string, add_hash=True):

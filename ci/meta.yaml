@@ -1,0 +1,34 @@
+package:
+  name: bw_default_backend-dev
+  version: {{ environ['VERSION'] }}
+
+source:
+  path: ..
+
+build:
+  noarch_python: True
+  number: 0
+  script: python setup.py install --single-version-externally-managed --record record.txt
+  script_env:
+   - VERSION
+   - CONDA_BLD_PATH
+
+requirements:
+  build:
+    - python
+    - setuptools
+  run:
+    - python
+    - numpy
+    - scipy
+    - brightway_projects-dev
+
+test:
+  imports:
+    - bw_default_backend
+
+about:
+  home: "https://github.com/brightway-lca/bw_default_backend"
+  license: BSD License
+  summary: 'Default backend for brightway using SQLite3 and peewee'
+license_family: BSD
