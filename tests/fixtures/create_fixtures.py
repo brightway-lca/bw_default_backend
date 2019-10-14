@@ -16,10 +16,7 @@ def basic_fixture():
     food_collection = backend.Collection.create(name="food")
 
     first = backend.Flow.create(
-        name="an emission",
-        kind="biosphere",
-        collection=biosphere_collection,
-        unit="kg",
+        name="an emission", kind="biosphere", collection=biosphere_collection, unit="kg"
     )
     second = backend.Flow.create(
         name="another emission",
@@ -28,15 +25,9 @@ def basic_fixture():
         unit="kg",
     )
     world = backend.Geocollection.create(name="world")
-    canada = backend.Location.create(
-        geocollection=world,
-        name="Canada",
-    )
+    canada = backend.Location.create(geocollection=world, name="Canada")
     lunch_flow = backend.Flow.create(
-        name="lunch food",
-        unit="kg",
-        kind="technosphere",
-        collection=food_collection,
+        name="lunch food", unit="kg", kind="technosphere", collection=food_collection
     )
     lunch_activity = backend.Activity.create(
         name="eating lunch",
@@ -45,16 +36,9 @@ def basic_fixture():
         location=canada,
     )
     backend.Exchange.create(
-        activity=lunch_activity,
-        flow=lunch_flow,
-        direction="production",
-        amount=0.5,
+        activity=lunch_activity, flow=lunch_flow, direction="production", amount=0.5
     )
-    backend.Exchange.create(
-        activity=lunch_activity,
-        flow=first,
-        amount=0.05,
-    )
+    backend.Exchange.create(activity=lunch_activity, flow=first, amount=0.05)
     dinner_flow = backend.Flow.create(
         name="dinner main dish",
         unit="kg",
@@ -68,13 +52,6 @@ def basic_fixture():
         location=canada,
     )
     backend.Exchange.create(
-        activity=dinner_activity,
-        flow=dinner_flow,
-        direction="production",
-        amount=0.25,
+        activity=dinner_activity, flow=dinner_flow, direction="production", amount=0.25
     )
-    backend.Exchange.create(
-        activity=dinner_activity,
-        flow=second,
-        amount=0.15,
-    )
+    backend.Exchange.create(activity=dinner_activity, flow=second, amount=0.15)
