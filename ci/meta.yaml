@@ -21,7 +21,7 @@ requirements:
     - python
     - numpy
     - scipy
-    - pypardiso
+    - brightway_projects-dev
 
 test:
   imports:
