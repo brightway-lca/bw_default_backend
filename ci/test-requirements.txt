@@ -3,3 +3,4 @@ peewee
 stats_arrays
 numpy
 pytest
+wrapt
