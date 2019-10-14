@@ -4,4 +4,3 @@ stats_arrays
 numpy
 pytest
 pytest-cov
-python-coveralls

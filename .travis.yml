@@ -43,6 +43,10 @@ script:
       pwd;
       ls;
       pytest --cov=bw_default_backend;
+      if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then
+        conda install conda-build anaconda-client;
+        bash ci/conda_upload.sh;
+      fi
       coveralls;
     else
       pytest;
