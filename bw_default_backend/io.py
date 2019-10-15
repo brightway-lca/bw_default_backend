@@ -139,7 +139,6 @@ def catalogue(filters):
 
 
 @has_project
-@config.database.atomic
 def create(data):
     """Add new data to a project.
 
@@ -156,16 +155,16 @@ def create(data):
         None
 
     """
-    increment_ids(data)
-    for label, model in label_mapping.items():
-        if data[label]:
-            write_chunked_sql(
-                (model.reformat(o) for o in data[label]), model, MODEL_LENGTHS[label]
-            )
+    with config.database.atomic():
+        increment_ids(data)
+        for label, model in label_mapping.items():
+            if data[label]:
+                write_chunked_sql(
+                    (model.reformat(o) for o in data[label]), model, MODEL_LENGTHS[label]
+                )
 
 
 @has_project
-@config.database.atomic
 def replace(data):
     """Completely replace currently existing data with ``data``.
 
@@ -180,13 +179,13 @@ def replace(data):
         None
 
     """
-    delete(data)
-    increment_ids(data)
-    create(data)
+    with config.database.atomic():
+        delete(data)
+        increment_ids(data)
+        create(data)
 
 
 @has_project
-@config.database.atomic
 def update(data):
     """Update currently existing data with new values in ``data``.
 
@@ -201,7 +200,8 @@ def update(data):
     Returns:
         None
     """
-    pass
+    with config.database.atomic():
+        pass
 
 
 @has_project
@@ -252,9 +252,8 @@ def write_chunked_sql(data, model, num_parameters):
     Raises:
 
     """
-    with config.database.atomic():
-        for batch in chunked(data, int(999 / num_parameters)):
-            model.insert_many(batch).execute()
+    for batch in chunked(data, int(999 / num_parameters)):
+        model.insert_many(batch).execute()
 
 
 @has_project
