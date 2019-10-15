@@ -14,6 +14,7 @@ __all__ = (
     "Method",
     "replace",
     "reset_database",
+    "register_backend",
     "UncertaintyType",
     "update",
 )
@@ -49,9 +50,11 @@ label_mapping = {
     "exchanges": Exchange,
 }
 
-from brightway_projects import backend_mapping
+def register_backend():
+    from brightway_projects import backend_mapping
+    backend_mapping["default"] = config
 
-backend_mapping["default"] = config
+register_backend()
 
 from .io import catalogue, create, delete, replace, update
 from .utils import reset_database
