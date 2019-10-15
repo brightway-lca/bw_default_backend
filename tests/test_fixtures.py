@@ -8,5 +8,5 @@ def test_basic_fixtures(bwtest, basic_fixture):
 
 
 def test_basic_fixtures_missing(bwtest):
-    projects.create(name="test")
+    projects.create_project(name="test")
     assert Activity.select().count() == 0

@@ -6,7 +6,7 @@ import pytest
 
 
 def test_basic_setup(bwtest):
-    projects.create("foo")
+    projects.create_project("foo")
     assert config.project
     assert "db" in os.listdir(config.project.directory)
     assert Collection.select().count() == 0
@@ -14,7 +14,7 @@ def test_basic_setup(bwtest):
 
 
 def test_deactivation(bwtest):
-    projects.create("foo")
+    projects.create_project("foo")
     config.deactivate_project(None)
     assert not config.project
     # with pytest.raises(TypeError):
@@ -23,5 +23,5 @@ def test_deactivation(bwtest):
 
 def test_uncertainty_type_creation(bwtest):
     assert UncertaintyType.select().count() == 0
-    projects.create("foo")
+    projects.create_project("foo")
     assert UncertaintyType.select().count() == 12

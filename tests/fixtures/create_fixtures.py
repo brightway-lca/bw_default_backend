@@ -8,7 +8,7 @@ def basic_fixture():
     NAME = "test-fixtures"
     # if NAME in bw.projects:
     #     bw.projects.delete_project(NAME)
-    bw.projects.create(NAME)
+    bw.projects.create_project(NAME)
 
     backend.reset_database()
 
