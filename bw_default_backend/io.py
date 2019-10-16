@@ -160,7 +160,9 @@ def create(data):
         for label, model in label_mapping.items():
             if data[label]:
                 write_chunked_sql(
-                    (model.reformat(o) for o in data[label]), model, MODEL_LENGTHS[label]
+                    (model.reformat(o) for o in data[label]),
+                    model,
+                    MODEL_LENGTHS[label],
                 )
 
 

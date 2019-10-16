@@ -1,14 +1,13 @@
 from .generic import UncertaintyType, DataModel
 from .geo import Location
-from brightway_projects.filesystem import safe_filename
 from brightway_projects.peewee import TupleField
-from peewee import TextField, ForeignKeyField, DateTimeField, FloatField, fn, SQL
+from peewee import TextField, ForeignKeyField, DateTimeField, FloatField, fn, SQL, Check
 import datetime
 
 
 class Collection(DataModel):
     name = TextField(unique=True)
-    modified = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')])
+    modified = DateTimeField(constraints=[SQL("DEFAULT CURRENT_TIMESTAMP")])
 
     def __str__(self):
         return "Collection {}".format(self.name)
@@ -135,19 +134,28 @@ class Activity(DataModel):
 
     def consumers(self):
         return Exchange.select().where(
-            kind
-            == "technosphere"
-            & flow
-            << self.exchanges.select(Exchange.flow).where(Exchange.kind == "production")
+            (kind == "technosphere")
+            & (
+                flow
+                << self.exchanges.select(Exchange.flow).where(
+                    Exchange.kind == "production"
+                )
+            )
         )
 
 
 class Exchange(DataModel):
     activity = ForeignKeyField(Activity, backref="exchanges")
     flow = ForeignKeyField(Flow, backref="exchanges")
-    direction = TextField(default="consumption")
+    # Define twice so don't need to specify during insert_many
+    direction = TextField(
+        default="production", constraints=[SQL("DEFAULT 'production'")]
+    )
     amount = FloatField()
     uncertainty_type = ForeignKeyField(UncertaintyType, null=True, backref="exchanges")
+
+    class Meta:
+        constraints = [Check("direction in ('consumption', 'production')")]
 
     # def save(self):
     #     if self.uncertainty_type is not None:

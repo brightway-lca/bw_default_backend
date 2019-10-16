@@ -31,9 +31,8 @@ before_install:
     fi
 install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-      conda create -n test-environment python=$TRAVIS_PYTHON_VERSION scipy numpy stats_arrays pytest pytest-cov coveralls peewee appdirs;
+      conda create -n test-environment python=$TRAVIS_PYTHON_VERSION brightway_projects-dev bw_processing-dev wrapt numpy stats_arrays pytest pytest-cov coveralls peewee;
       source activate test-environment;
-      pip install --pre https://github.com/brightway-lca/brightway_projects/archive/master.zip;
       pip install -e .;
     else
       pip3 install --upgrade pip;

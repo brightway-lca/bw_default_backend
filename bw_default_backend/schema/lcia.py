@@ -1,5 +1,6 @@
 from . import Location, Flow
 from .generic import DataModel, UncertaintyType
+
 # from ..filesystem import abbreviate
 from brightway_projects.peewee import TupleField
 from peewee import ForeignKeyField, DateTimeField, FloatField, SQL
@@ -8,7 +9,7 @@ import datetime
 
 class Method(DataModel):
     name = TupleField(unique=True)
-    modified = DateTimeField(constraints=[SQL('DEFAULT CURRENT_TIMESTAMP')])
+    modified = DateTimeField(constraints=[SQL("DEFAULT CURRENT_TIMESTAMP")])
 
     def __str__(self):
         return "Method {}".format(self.name)

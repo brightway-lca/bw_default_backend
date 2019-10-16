@@ -50,9 +50,12 @@ label_mapping = {
     "exchanges": Exchange,
 }
 
+
 def register_backend():
     from brightway_projects import backend_mapping
+
     backend_mapping["default"] = config
+
 
 register_backend()
 

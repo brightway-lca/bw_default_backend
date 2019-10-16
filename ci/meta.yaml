@@ -6,7 +6,7 @@ source:
   path: ..
 
 build:
-  noarch_python: True
+  noarch: python
   number: 0
   script: python setup.py install --single-version-externally-managed --record record.txt
   script_env:
@@ -22,6 +22,7 @@ requirements:
     - numpy
     - scipy
     - brightway_projects-dev
+    - bw_processing-dev
 
 test:
   imports:
