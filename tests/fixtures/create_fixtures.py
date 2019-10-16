@@ -8,10 +8,7 @@ def basic_fixture():
     NAME = "test-fixtures"
     # if NAME in bw.projects:
     #     bw.projects.delete_project(NAME)
-    bw.projects.create_project(NAME)
-
-    backend.reset_database()
-
+    bw.projects.create_project(NAME, add_base_data=True)
     biosphere_collection = backend.Collection.create(name="biosphere")
     food_collection = backend.Collection.create(name="food")
 
@@ -24,7 +21,7 @@ def basic_fixture():
         collection=biosphere_collection,
         unit="kg",
     )
-    world = backend.Geocollection.create(name="world")
+    world = backend.Geocollection.get(name="world")
     canada = backend.Location.create(geocollection=world, name="Canada")
     lunch_flow = backend.Flow.create(
         name="lunch food", unit="kg", kind="technosphere", collection=food_collection
@@ -55,3 +52,7 @@ def basic_fixture():
         activity=dinner_activity, flow=dinner_flow, direction="production", amount=0.25
     )
     backend.Exchange.create(activity=dinner_activity, flow=second, amount=0.15)
+
+    method = backend.Method.create(name=("test", "method"))
+    backend.CharacterizationFactor.create(flow=first, method=method, amount=42)
+    backend.CharacterizationFactor.create(flow=second, method=method, amount=99)

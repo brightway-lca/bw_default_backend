@@ -38,7 +38,7 @@ class Config:
         self.project = None
         self.database.close()
 
-    def create_project(self, project, add_base_data=True, **kwargs):
+    def create_project(self, project, add_base_data=False, **kwargs):
         if not check_dir(project.directory):
             raise ValueError("Project directory doesn't exist or is not writable")
         for name in self.directories:

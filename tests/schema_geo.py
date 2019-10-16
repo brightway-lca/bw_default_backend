@@ -5,7 +5,7 @@ import datetime
 
 
 def test_geocollection_modified_autoupdates(bwtest):
-    projects.create_project("test", add_base_data=False)
+    projects.create_project("test")
     now = datetime.datetime.utcnow() - datetime.timedelta(minutes=1)
     Geocollection.create(name="foo", modified=now - datetime.timedelta(days=1))
     gc = Geocollection.get(name="foo")
@@ -24,7 +24,7 @@ def test_geocollection_modified_autoupdates(bwtest):
 
 
 def test_geocollection_modified_autoupdates_location_moved(bwtest):
-    projects.create_project("test", add_base_data=False)
+    projects.create_project("test")
     now = datetime.datetime.utcnow() - datetime.timedelta(minutes=1)
     gc = Geocollection.create(name="foo", modified=now - datetime.timedelta(days=1))
     Location.create(geocollection=gc, name="bar")
