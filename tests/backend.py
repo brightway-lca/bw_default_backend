@@ -15,7 +15,7 @@ def test_basic_setup(bwtest):
 
 def test_deactivation(bwtest):
     projects.create_project("foo")
-    config.deactivate_project(None)
+    config.deactivate_project()
     assert not config.project
     # with pytest.raises(TypeError):
     #     Collection.select().count()

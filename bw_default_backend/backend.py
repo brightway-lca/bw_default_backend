@@ -45,7 +45,7 @@ class Config:
         self.project = project
         self.database._change_path(project.directory / "db" / "data.db")
 
-    def deactivate_project(self, project):
+    def deactivate_project(self):
         self.project = None
         self.database.close()
 
