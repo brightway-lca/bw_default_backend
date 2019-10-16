@@ -34,7 +34,6 @@ class CharacterizationFactor(DataModel):
     flow = ForeignKeyField(Flow, backref="cfs")
     method = ForeignKeyField(Method, backref="cfs")
     amount = FloatField()
-    location = ForeignKeyField(Location, null=True)
     uncertainty_type = ForeignKeyField(UncertaintyType, null=True, backref="cfs")
 
     def __repr__(self):
