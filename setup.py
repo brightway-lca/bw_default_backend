@@ -3,9 +3,16 @@ import os
 
 here = os.path.abspath(os.path.dirname(__file__))
 
+
+v_temp = {}
+with open("bw_default_backend/version.py") as fp:
+    exec(fp.read(), v_temp)
+version = ".".join((str(x) for x in v_temp['version']))
+
+
 setup(
     name='bw_default_backend',
-    version='0.1',
+    version=version,
     description='Default backend for Brightway Life Cycle Assessment framework',
     long_description=open(os.path.join(here, "README.md")).read(),
     url='https://github.com/brightway-lca/bw_default_backend',

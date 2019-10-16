@@ -1,3 +1,5 @@
+from .version import version as __version__
+
 __all__ = (
     "Activity",
     "catalogue",
@@ -18,8 +20,6 @@ __all__ = (
     "UncertaintyType",
     "update",
 )
-
-__version__ = (0, 1)
 
 from .backend import Config
 
