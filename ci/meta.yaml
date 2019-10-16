@@ -21,6 +21,8 @@ requirements:
     - python
     - numpy
     - scipy
+    - stats_arrays
+    - wrapt
     - brightway_projects-dev
     - bw_processing-dev
 
