@@ -25,9 +25,9 @@ class Method(DataModel):
     #         "method." + abbreviate(self.name)
     #     )
 
-    def save(self):
+    def save(self, *args, **kwargs):
         self.modified = datetime.datetime.now()
-        super().save()
+        super().save(*args, **kwargs)
 
 
 class CharacterizationFactor(DataModel):

@@ -10,22 +10,11 @@ from .schema import (
     Method,
     CharacterizationFactor,
     UncertaintyType,
+    TABLES,
 )
 from brightway_projects.peewee import SubstitutableDatabase
 import os
 import stats_arrays as sa
-
-TABLES = (
-    Activity,
-    Collection,
-    Exchange,
-    Flow,
-    Geocollection,
-    Location,
-    Method,
-    CharacterizationFactor,
-    UncertaintyType,
-)
 
 
 class Config:
@@ -39,7 +28,7 @@ class Config:
 
     def __reset__(self):
         self.project = None
-        self.database = SubstitutableDatabase(tables=list(TABLES))
+        self.database = SubstitutableDatabase(tables=TABLES)
 
     def activate_project(self, project):
         self.project = project
@@ -76,27 +65,29 @@ class Config:
             Location.create(geocollection=world, name="Global")
 
     def __create_triggers(self):
-        self.database.execute_sql(
-            """CREATE TRIGGER update_collection_modified_delete after delete
+        COLLECTION_TEMPLATE = """CREATE TRIGGER update_collection_modified_{verb}{extra} after {verb}
                 on exchange
                 begin
-                    update collection set modified = current_timestamp where id in (select distinct activity.collection_id from activity join exchange on activity.id = exchange.activity_id);
+                    update collection set modified = current_timestamp where id in (select activity.collection_id from activity where activity.id = {no}.activity_id);
                 end;"""
-        )
-        self.database.execute_sql(
-            """CREATE TRIGGER update_collection_modified_insert after insert
-                on exchange
+        GENERIC_TEMPLATE = """CREATE TRIGGER update_{table}_modified_{verb}{extra} after {verb}
+                on {child}
                 begin
-                    update collection set modified = current_timestamp where id in (select distinct activity.collection_id from activity join exchange on activity.id = exchange.activity_id);
+                    update {table} set modified = current_timestamp where id = {no}.{table}_id;
                 end;"""
-        )
-        self.database.execute_sql(
-            """CREATE TRIGGER update_collection_modified_update after update
-                on exchange
-                begin
-                    update collection set modified = current_timestamp where id in (select distinct activity.collection_id from activity join exchange on activity.id = exchange.activity_id);
-                end;"""
-        )
+
+        self.database.execute_sql(COLLECTION_TEMPLATE.format(verb="delete", no="OLD", extra=""))
+        self.database.execute_sql(COLLECTION_TEMPLATE.format(verb="insert", no="NEW", extra=""))
+        self.database.execute_sql(COLLECTION_TEMPLATE.format(verb="update", no="OLD", extra="1"))
+        self.database.execute_sql(COLLECTION_TEMPLATE.format(verb="update", no="NEW", extra="2"))
+        self.database.execute_sql(GENERIC_TEMPLATE.format(verb="delete", table="method", child="characterizationfactor", no="OLD", extra=""))
+        self.database.execute_sql(GENERIC_TEMPLATE.format(verb="insert", table="method", child="characterizationfactor", no="NEW", extra=""))
+        self.database.execute_sql(GENERIC_TEMPLATE.format(verb="update", table="method", child="characterizationfactor", no="NEW", extra="1"))
+        self.database.execute_sql(GENERIC_TEMPLATE.format(verb="update", table="method", child="characterizationfactor", no="OLD", extra="2"))
+        self.database.execute_sql(GENERIC_TEMPLATE.format(verb="delete", table="geocollection", child="location", no="OLD", extra=""))
+        self.database.execute_sql(GENERIC_TEMPLATE.format(verb="insert", table="geocollection", child="location", no="NEW", extra=""))
+        self.database.execute_sql(GENERIC_TEMPLATE.format(verb="update", table="geocollection", child="location", no="NEW", extra="1"))
+        self.database.execute_sql(GENERIC_TEMPLATE.format(verb="update", table="geocollection", child="location", no="OLD", extra="2"))
 
     def copy_project(self, name):
         self.copied = name
