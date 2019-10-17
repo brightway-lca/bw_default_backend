@@ -104,6 +104,6 @@ class Config:
 
     @property
     def processed_dir(self):
-        if not self.dirpath:
+        if not self.project:
             raise ValueError("Backend has not been activated")
-        return os.path.join(self.dirpath, "processed")
+        return self.project.directory / "processed"

@@ -3,12 +3,14 @@ from .version import version as __version__
 __all__ = (
     "Activity",
     "catalogue",
+    "CalculationPackage",
     "CharacterizationFactor",
     "Collection",
     "config",
     "create",
     "delete",
     "Exchange",
+    "filepath_for_processed_array",
     "Flow",
     "Geocollection",
     "label_mapping",
@@ -27,6 +29,7 @@ config = Config()
 
 from .schema import (
     Activity,
+    CalculationPackage,
     Collection,
     collections,
     Exchange,
@@ -61,3 +64,4 @@ register_backend()
 
 from .io import catalogue, create, delete, replace, update
 from .utils import reset_database
+from .processing import filepath_for_processed_array

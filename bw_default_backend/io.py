@@ -262,7 +262,7 @@ def write_chunked_sql(data, model, num_parameters):
 def insert_existing_database(filepath):
     """Insert all values from an existing ``default_backend`` database.
 
-    Should only be used for completely new data, and normally only only when creating a project. There isn't a lot of logic or error handling here, so instead of this function matching via a ``brightway_io`` importer is recommended.
+    Should only be used for completely new data, and normally only only when creating a project. There isn't a lot of logic or error handling here, so instead of this function matching via a ``brightway_io`` importer is recommended. In other words, you probably shouldn't use this, as it will break and people will get angry.
 
     Args:
         filepath: Absolute filepath to a source database.
@@ -326,8 +326,8 @@ def insert_existing_database(filepath):
             )
             cf_offset = CharacterizationFactor.max()
             sql(
-                """insert into characterizationfactor ("id", "data", "amount", "flow_id", "method_id", "location_id", "uncertainty_type_id") select "id" + ?, "data", "amount", "flow_id" + ?, "method_id" + ?, "location_id" + ?, "uncertainty_type_id" from source_db.characterizationfactor""",
-                (cf_offset, flow_offset, method_offset, location_offset),
+                """insert into characterizationfactor ("id", "data", "amount", "flow_id", "method_id", "uncertainty_type_id") select "id" + ?, "data", "amount", "flow_id" + ?, "method_id" + ?, "uncertainty_type_id" from source_db.characterizationfactor""",
+                (cf_offset, flow_offset, method_offset),
             )
 
     sql("detach source_db")
