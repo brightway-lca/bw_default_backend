@@ -119,8 +119,8 @@ class Activity(DataModel):
         return "Activity {}".format(self.name)
 
     def __repr__(self):
-        return "Activity {} ({}; {}; {}; {})".format(
-            self.name, self.collection, self.location, self.reference_product, self.unit
+        return "Activity {} ({}; {}; {})".format(
+            self.name, self.collection, self.location, self.reference_product
         )
 
     def technosphere(self):
