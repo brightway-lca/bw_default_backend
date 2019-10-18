@@ -2,3 +2,5 @@ peewee
 stats_arrays
 numpy
 wrapt
+brightway_projects
+brightway_processing

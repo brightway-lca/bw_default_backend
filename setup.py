@@ -37,5 +37,6 @@ setup(
         'numpy',
         'wrapt',
         'brightway_projects',
+        "brightway_processing",
     ],
 )
