@@ -78,20 +78,6 @@ class Collection(DataModel):
     #     )
 
 
-class CollectionList:
-    def __contains__(self, name):
-        return bool(Collection.select().where(Collection.name == name).count())
-
-    def __iter__(self):
-        return Collection.select().order_by(Collection.name)
-
-    def __len__(self):
-        return Collection.select().count()
-
-
-collections = CollectionList()
-
-
 class Flow(DataModel):
     name = TextField()
     unit = TextField()

@@ -1,7 +1,6 @@
 from . import (
     Activity,
     Collection,
-    collections,
     config,
     Exchange,
     Flow,

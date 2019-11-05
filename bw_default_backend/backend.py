@@ -2,7 +2,6 @@ from .filesystem import create_dir, check_dir
 from .schema import (
     Activity,
     Collection,
-    collections,
     Exchange,
     Flow,
     Geocollection,

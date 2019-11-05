@@ -31,7 +31,6 @@ from .schema import (
     Activity,
     CalculationPackage,
     Collection,
-    collections,
     Exchange,
     Flow,
     Geocollection,
