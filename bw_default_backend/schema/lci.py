@@ -1,7 +1,7 @@
 from .generic import UncertaintyType, DataModel
 from .geo import Location
 from brightway_projects.peewee import TupleField
-from peewee import TextField, ForeignKeyField, DateTimeField, FloatField, fn, SQL, Check
+from peewee import TextField, ForeignKeyField, DateTimeField, FloatField, fn, SQL, Check, DoesNotExist
 import datetime
 
 
@@ -14,6 +14,17 @@ class Collection(DataModel):
 
     def __repr__(self):
         return "Collection {}:{} ({})".format(self.id, self.name, self.modified)
+
+    @property
+    def package(self):
+        from . import CalculationPackage
+        try:
+            cp = CalculationPackage.get(collection = self)
+            if self.modified > cp.modified:
+                self._process()
+        except DoesNotExist:
+            self._process()
+        return CalculationPackage.get(collection = self).filepath
 
     def random_activity(self):
         """Get a random `Activity`"""
