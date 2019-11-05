@@ -37,8 +37,8 @@ class CharacterizationFactor(DataModel):
     uncertainty_type = ForeignKeyField(UncertaintyType, null=True, backref="cfs")
 
     def __repr__(self):
-        return "Characterization Factor {} {} ({}; {})".format(
-            self.amount, self.flow, self.method, self.location
+        return "Characterization Factor {} {} ({})".format(
+            self.amount, self.flow, self.method
         )
 
     # def save(self):
