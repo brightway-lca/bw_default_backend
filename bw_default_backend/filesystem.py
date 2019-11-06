@@ -25,15 +25,6 @@ def safe_filename(string, add_hash=True):
         return safe
 
 
-def abbreviate(obj):
-    """Take a tuple or list and construct a filename-safe string"""
-    return (
-        safe_filename(".".join([x[:6].replace(" ", "") for x in obj]), False)
-        + "."
-        + hashlib.md5(str(obj).encode("utf8")).hexdigest()
-    )
-
-
 def create_dir(dirpath):
     """Create directory tree to `dirpath`; ignore if already exists"""
     if not os.path.isdir(dirpath):

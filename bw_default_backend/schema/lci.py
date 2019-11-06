@@ -21,10 +21,16 @@ class Collection(DataModel):
         try:
             cp = CalculationPackage.get(collection = self)
             if self.modified > cp.modified:
-                self._process()
+                self.process()
         except DoesNotExist:
-            self._process()
+            self.process()
         return CalculationPackage.get(collection = self).filepath
+
+    def process(self, **kwargs):
+        from .. import Processor
+        processor = Processor({'collection': [self]})
+        processor.gather_data()
+        return processor.write_package(**kwargs)
 
     def random_activity(self):
         """Get a random `Activity`"""

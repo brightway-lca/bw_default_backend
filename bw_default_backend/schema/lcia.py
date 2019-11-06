@@ -1,9 +1,8 @@
-from . import Location, Flow
+from . import Flow
 from .generic import DataModel, UncertaintyType
 
-# from ..filesystem import abbreviate
 from brightway_projects.peewee import TupleField
-from peewee import ForeignKeyField, DateTimeField, FloatField, SQL
+from peewee import ForeignKeyField, DateTimeField, FloatField, SQL, DoesNotExist
 import datetime
 
 
@@ -17,13 +16,22 @@ class Method(DataModel):
     def __repr__(self):
         return "Method {}:{} ({})".format(self.id, self.name, self.modified)
 
-    # @property
-    # def filepath_processed(self):
-    #     from .. import config
-    #     return os.path.join(
-    #         config.processed_dir,
-    #         "method." + abbreviate(self.name)
-    #     )
+    @property
+    def package(self):
+        from . import CalculationPackage
+        try:
+            cp = CalculationPackage.get(method = self)
+            if self.modified > cp.modified:
+                self.process()
+        except DoesNotExist:
+            self.process()
+        return CalculationPackage.get(collection = self).filepath
+
+    def process(self, **kwargs):
+        from .. import Processor
+        processor = Processor({'method': [self]})
+        processor.gather_data()
+        return processor.write_package(**kwargs)
 
     def save(self, *args, **kwargs):
         self.modified = datetime.datetime.now()
