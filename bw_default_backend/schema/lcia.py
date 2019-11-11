@@ -48,10 +48,3 @@ class CharacterizationFactor(DataModel):
         return "Characterization Factor {} {} ({})".format(
             self.amount, self.flow, self.method
         )
-
-    # def save(self):
-    #     if 'uncertainty type' not in self.uncertainty:
-    #         self.uncertainty['uncertainty type'] = 0
-    #     uncertainty_choices[self['uncertainty']['uncertainty type']].validate(
-    #         self['uncertainty'])
-    #     super().save()

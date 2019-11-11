@@ -70,30 +70,6 @@ class Collection(DataModel):
                 )
         return seen
 
-    # @property
-    # def filepath_geoarray(self):
-    #     from .. import config
-
-    #     return os.path.join(
-    #         config.processed_dir, "geoarray." + safe_filename(self.name)
-    #     )
-
-    # @property
-    # def filepath_technosphere(self):
-    #     from .. import config
-
-    #     return os.path.join(
-    #         config.processed_dir, "technosphere." + safe_filename(self.name)
-    #     )
-
-    # @property
-    # def filepath_biosphere(self):
-    #     from .. import config
-
-    #     return os.path.join(
-    #         config.processed_dir, "biosphere." + safe_filename(self.name)
-    #     )
-
 
 class Flow(DataModel):
     name = TextField()
@@ -137,9 +113,9 @@ class Activity(DataModel):
 
     def consumers(self):
         return Exchange.select().where(
-            (kind == "technosphere")
+            (Exchange.kind == "technosphere")
             & (
-                flow
+                Exchange.flow
                 << self.exchanges.select(Exchange.flow).where(
                     Exchange.kind == "production"
                 )
@@ -159,8 +135,3 @@ class Exchange(DataModel):
 
     class Meta:
         constraints = [Check("direction in ('consumption', 'production')")]
-
-    # def save(self):
-    #     if self.uncertainty_type is not None:
-    #         uncertainty_choices[self.uncertainty_type.id].validate(self.data)
-    #     super().save()
