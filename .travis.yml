@@ -31,7 +31,7 @@ before_install:
     fi
 install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-      conda create -n test-environment python=$TRAVIS_PYTHON_VERSION bw_processing-dev bw_projects-dev bw_processing-dev wrapt numpy stats_arrays pytest pytest-cov coveralls peewee;
+      conda create -n test-environment python=$TRAVIS_PYTHON_VERSION bw_projects-dev bw_processing-dev wrapt numpy stats_arrays pytest pytest-cov coveralls peewee;
       source activate test-environment;
       pip install -e .;
     else
