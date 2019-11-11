@@ -1,6 +1,6 @@
 from bw_default_backend import Geocollection, Location
-from brightway_projects import projects
-from brightway_projects.testing import bwtest
+from bw_projects import projects
+from bw_projects.testing import bwtest
 import datetime
 
 

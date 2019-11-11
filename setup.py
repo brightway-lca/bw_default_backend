@@ -36,7 +36,7 @@ setup(
         'stats_arrays',
         'numpy',
         'wrapt',
-        'brightway_projects',
+        'bw_projects',
         "bw_processing",
     ],
 )

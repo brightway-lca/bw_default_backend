@@ -54,7 +54,7 @@ label_mapping = {
 
 
 def register_backend():
-    from brightway_projects import backend_mapping
+    from bw_projects import backend_mapping
 
     backend_mapping["default"] = config
 

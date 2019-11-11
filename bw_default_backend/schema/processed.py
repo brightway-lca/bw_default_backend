@@ -1,7 +1,7 @@
 from .lci import Collection
 from .lcia import Method
-from brightway_projects.filesystem import md5
-from brightway_projects.peewee import PathField
+from bw_projects.filesystem import md5
+from bw_projects.peewee import PathField
 from peewee import ForeignKeyField, DateTimeField, Model, SQL, TextField
 
 

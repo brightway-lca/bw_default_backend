@@ -1,4 +1,4 @@
-import brightway_projects as bw
+import bw_projects as bw
 import bw_default_backend as backend
 import pytest
 

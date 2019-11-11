@@ -1,6 +1,6 @@
 from .generic import UncertaintyType, DataModel
 from .geo import Location
-from brightway_projects.peewee import TupleField
+from bw_projects.peewee import TupleField
 from peewee import TextField, ForeignKeyField, DateTimeField, FloatField, fn, SQL, Check, DoesNotExist
 import datetime
 

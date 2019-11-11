@@ -1,7 +1,7 @@
 from fixtures.create_fixtures import basic_fixture
-from brightway_projects import projects
+from bw_projects import projects
 from bw_default_backend.utils import reset_database, has_project
-from brightway_projects.testing import bwtest
+from bw_projects.testing import bwtest
 from bw_default_backend import (
     Collection,
     Activity,

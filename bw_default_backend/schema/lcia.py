@@ -1,7 +1,7 @@
 from . import Flow
 from .generic import DataModel, UncertaintyType
 
-from brightway_projects.peewee import TupleField
+from bw_projects.peewee import TupleField
 from peewee import ForeignKeyField, DateTimeField, FloatField, SQL, DoesNotExist
 import datetime
 

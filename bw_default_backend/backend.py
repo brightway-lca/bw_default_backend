@@ -11,7 +11,7 @@ from .schema import (
     UncertaintyType,
     TABLES,
 )
-from brightway_projects.peewee import SubstitutableDatabase
+from bw_projects.peewee import SubstitutableDatabase
 import os
 import stats_arrays as sa
 
