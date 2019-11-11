@@ -23,7 +23,7 @@ requirements:
     - scipy
     - stats_arrays
     - wrapt
-    - brightway_projects-dev
+    - bw_projects-dev
     - bw_processing-dev
 
 test:

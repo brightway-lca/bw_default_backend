@@ -261,7 +261,7 @@ def write_chunked_sql(data, model, num_parameters):
 def insert_existing_database(filepath):
     """Insert all values from an existing ``default_backend`` database.
 
-    Should only be used for completely new data, and normally only only when creating a project. There isn't a lot of logic or error handling here, so instead of this function matching via a ``brightway_io`` importer is recommended. In other words, you probably shouldn't use this, as it will break and people will get angry.
+    Should only be used for completely new data, and normally only only when creating a project. There isn't a lot of logic or error handling here, so instead of this function matching via a ``bw_io`` importer is recommended. In other words, you probably shouldn't use this, as it will break and people will get angry.
 
     Args:
         filepath: Absolute filepath to a source database.
